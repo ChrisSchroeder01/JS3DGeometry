@@ -1,4 +1,3 @@
-
 var Perspective = [
     [1,0,0,0],
     [0,1,0,0],
@@ -6,6 +5,13 @@ var Perspective = [
     [0,0,0,0]
 ];
 
+
+/**
+ * Returns a 4x4 Rotation-Matrix
+ * @param {string} axis x,y or z
+ * @param {number} dedree 
+ * @returns 4x4 Matrix
+ */
 function R(axis, dedree) {
     switch (axis) {
         case 'x':
@@ -42,6 +48,14 @@ function R(axis, dedree) {
     ];
 }
 
+
+/**
+ * Returns a 4x4 Scale-Matrix
+ * @param {number} kx Scale in x-Axis
+ * @param {number} ky Scale in y-Axis
+ * @param {number} kz Scale in z-Axis
+ * @returns 4x4 Matrix
+ */
 function S(kx,ky,kz) {
     return [
         [kx,0,0,0],
@@ -51,6 +65,14 @@ function S(kx,ky,kz) {
     ];
 }
 
+
+/**
+ * Returns a 4x4 Translation-Matrix
+ * @param {number} x Translation in x-Axis
+ * @param {number} y Translation in y-Axis
+ * @param {number} z Translation in z-Axis
+ * @returns 4x4 Matrix
+ */
 function T(x,y,z) {
     return [
         [1,0,0,0],
@@ -61,6 +83,12 @@ function T(x,y,z) {
 }
 
 
+/**
+ * Multipies Point with Transformation-Matrix to apply transformation.
+ * @param {Point} T 1x4 Array Representing a Point
+ * @param {Matrix} M 4x4 Transformation Matrix
+ * @returns 1x4 Point
+ */
 function TM(T,M) {
     var newT = [];
     
@@ -77,28 +105,38 @@ function TM(T,M) {
     return newT;
 }
 
-function startGame() {
-    GameArea.start();
-    GameArea.draw();
+
+/**
+ * start Engine
+ */
+function start() {
+    JS3DGeometry.start();
+    JS3DGeometry.draw();
 }
 
-var GameArea = {
+var JS3DGeometry = {
     canvas : document.createElement("canvas"),
     start : function() {
         this.canvas.width = 720;
         this.canvas.height = 480;
-        this.context = this.canvas.getContext("2d");
+        this.ctx = this.canvas.getContext("2d");
         this.Items = [];
         this.addCube(50,50,50);
-        document.getElementById("GameArea").appendChild(this.canvas);
+        document.getElementById("JS3DGeometry").appendChild(this.canvas);
         this.Interval = setInterval(() => {
             this.clear();
             this.draw();
         }, 1000/30);
     },
+    /**
+     * Clear Canvas
+     */
     clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
+    /**
+     * Draw Items on Canvas
+     */
     draw : function() {
         for (let i = 0; i < this.Items.length; i++) {
             Item = this.Items[i];
@@ -127,13 +165,19 @@ var GameArea = {
                 //p2 = TM(p2, Perspective);
 
 
-                this.context.beginPath();
-                this.context.moveTo(p1[0], p1[1]);
-                this.context.lineTo(p2[0], p2[1]);
-                this.context.stroke();
+                this.ctx.beginPath();
+                this.ctx.moveTo(p1[0], p1[1]);
+                this.ctx.lineTo(p2[0], p2[1]);
+                this.ctx.stroke();
             }
         }
     },
+    /**
+     * Add Basic Cube
+     * @param {number} W Width
+     * @param {number} H Height
+     * @param {number} D Depth
+     */
     addCube(W, H, D) {
         this.Items.push(new Cube(W, H, D));
 
@@ -153,21 +197,21 @@ var GameArea = {
                     </tr>
                     <tr>
                         <th>Translation</th>
-                        <td><input type="number" id="i`+i+`tx" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[0]+`"></td>
-                        <td><input type="number" id="i`+i+`ty" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[1]+`"></td>
-                        <td><input type="number" id="i`+i+`tz" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[2]+`"></td>
+                        <td><input type="number" id="i`+i+`tx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[0]+`"></td>
+                        <td><input type="number" id="i`+i+`ty" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[1]+`"></td>
+                        <td><input type="number" id="i`+i+`tz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[2]+`"></td>
                     </tr>
                     <tr>
                         <th>Scale</th>
-                        <td><input type="number" id="i`+i+`sx" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[0]+`"></td>
-                        <td><input type="number" id="i`+i+`sy" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[1]+`"></td>
-                        <td><input type="number" id="i`+i+`sz" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[2]+`"></td>
+                        <td><input type="number" id="i`+i+`sx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[0]+`"></td>
+                        <td><input type="number" id="i`+i+`sy" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[1]+`"></td>
+                        <td><input type="number" id="i`+i+`sz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[2]+`"></td>
                     </tr>
                     <tr>
                         <th>Rotation</th>
-                        <td><input type="range" min="0" max="360" id="i`+i+`rx" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[0]+`"><span id="i`+i+`rsx"></span></td>
-                        <td><input type="range" min="0" max="360" id="i`+i+`ry" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[1]+`"><span id="i`+i+`rsy"></span></td>
-                        <td><input type="range" min="0" max="360" id="i`+i+`rz" oninput="GameArea.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[2]+`"><span id="i`+i+`rsz"></span></td>
+                        <td><input type="range" min="0" max="360" id="i`+i+`rx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[0]+`"><span id="i`+i+`rsx"></span></td>
+                        <td><input type="range" min="0" max="360" id="i`+i+`ry" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[1]+`"><span id="i`+i+`rsy"></span></td>
+                        <td><input type="range" min="0" max="360" id="i`+i+`rz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[2]+`"><span id="i`+i+`rsz"></span></td>
                     </tr>
                 </table>
             </details>
@@ -176,6 +220,10 @@ var GameArea = {
         }
 
     },
+    /**
+     * Change Item Transform
+     * @param {Index} i 
+     */
     changeItem(i) {
         var translation = [
             parseFloat(document.getElementById("i"+i+"tx").value),
