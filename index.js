@@ -1,9 +1,19 @@
 var Perspective = [
     [1,0,0,0],
     [0,1,0,0],
-    [0,0,1,1],
+    [0,0,1,0],
     [0,0,0,0]
 ];
+
+
+function P() {
+    return [
+        [1,0,0,0],
+        [0,1,0,0],
+        [0,0,1,1/90],
+        [0,0,0,0]
+    ]
+}
 
 
 /**
@@ -122,6 +132,7 @@ var JS3DGeometry = {
         this.ctx = this.canvas.getContext("2d");
         this.Items = [];
         this.addCube(50,50,50);
+        this.addCylinder(50,50);
         document.getElementById("JS3DGeometry").appendChild(this.canvas);
         this.Interval = setInterval(() => {
             this.clear();
@@ -154,15 +165,16 @@ var JS3DGeometry = {
                 p1 = TM(p1, R('x',Math.PI * Item.transform.rotation[0] / 180));
                 p1 = TM(p1, R('y',Math.PI * Item.transform.rotation[1] / 180));
                 p1 = TM(p1, R('z',Math.PI * Item.transform.rotation[2] / 180));
+                //p1 = TM(p1, P());
                 p1 = TM(p1, T(Item.transform.translation[0],Item.transform.translation[1],Item.transform.translation[2]));
-                //p1 = TM(p1, Perspective);
-
+                
                 p2 = TM(p2, S(Item.transform.scale[0],Item.transform.scale[1],Item.transform.scale[2]));
                 p2 = TM(p2, R('x',Math.PI * Item.transform.rotation[0] / 180));
                 p2 = TM(p2, R('y',Math.PI * Item.transform.rotation[1] / 180));
                 p2 = TM(p2, R('z',Math.PI * Item.transform.rotation[2] / 180));
+                //p2 = TM(p2, P());
                 p2 = TM(p2, T(Item.transform.translation[0],Item.transform.translation[1],Item.transform.translation[2]));
-                //p2 = TM(p2, Perspective);
+                
 
 
                 this.ctx.beginPath();
@@ -220,6 +232,53 @@ var JS3DGeometry = {
         }
 
     },
+
+    addCylinder(R, H) {
+        this.Items.push(new Cylinder(R,H));
+
+        document.getElementById("Items").innerHTML = '';
+
+        for (let i = 0; i < this.Items.length; i++) {
+            document.getElementById("Items").innerHTML += `
+            <div>
+            <h1>`+this.Items[i].constructor.name+` `+i+`</h1>
+            <details>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Z</th>
+                    </tr>
+                    <tr>
+                        <th>Translation</th>
+                        <td><input type="number" id="i`+i+`tx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[0]+`"></td>
+                        <td><input type="number" id="i`+i+`ty" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[1]+`"></td>
+                        <td><input type="number" id="i`+i+`tz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[2]+`"></td>
+                    </tr>
+                    <tr>
+                        <th>Scale</th>
+                        <td><input type="number" id="i`+i+`sx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[0]+`"></td>
+                        <td><input type="number" id="i`+i+`sy" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[1]+`"></td>
+                        <td><input type="number" id="i`+i+`sz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[2]+`"></td>
+                    </tr>
+                    <tr>
+                        <th>Rotation</th>
+                        <td><input type="range" min="0" max="360" id="i`+i+`rx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[0]+`"><span id="i`+i+`rsx"></span></td>
+                        <td><input type="range" min="0" max="360" id="i`+i+`ry" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[1]+`"><span id="i`+i+`rsy"></span></td>
+                        <td><input type="range" min="0" max="360" id="i`+i+`rz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[2]+`"><span id="i`+i+`rsz"></span></td>
+                    </tr>
+                </table>
+            </details>
+        </div>
+            `;
+        }
+
+    },
+
+
+
+
     /**
      * Change Item Transform
      * @param {Index} i 
@@ -252,5 +311,3 @@ var JS3DGeometry = {
         this.Items[i].setRotation(rotation);
     },
 }
-
-
