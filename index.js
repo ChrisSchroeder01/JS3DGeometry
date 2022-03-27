@@ -133,6 +133,7 @@ var JS3DGeometry = {
         this.Items = [];
         this.addCube(50,50,50);
         this.addCylinder(50,50);
+        this.addCone(50,100);
         document.getElementById("JS3DGeometry").appendChild(this.canvas);
         this.Interval = setInterval(() => {
             this.clear();
@@ -276,6 +277,49 @@ var JS3DGeometry = {
 
     },
 
+
+    addCone(R, H) {
+        this.Items.push(new Cone(R,H));
+
+        document.getElementById("Items").innerHTML = '';
+
+        for (let i = 0; i < this.Items.length; i++) {
+            document.getElementById("Items").innerHTML += `
+            <div>
+            <h1>`+this.Items[i].constructor.name+` `+i+`</h1>
+            <details>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Z</th>
+                    </tr>
+                    <tr>
+                        <th>Translation</th>
+                        <td><input type="number" id="i`+i+`tx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[0]+`"></td>
+                        <td><input type="number" id="i`+i+`ty" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[1]+`"></td>
+                        <td><input type="number" id="i`+i+`tz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.translation[2]+`"></td>
+                    </tr>
+                    <tr>
+                        <th>Scale</th>
+                        <td><input type="number" id="i`+i+`sx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[0]+`"></td>
+                        <td><input type="number" id="i`+i+`sy" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[1]+`"></td>
+                        <td><input type="number" id="i`+i+`sz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.scale[2]+`"></td>
+                    </tr>
+                    <tr>
+                        <th>Rotation</th>
+                        <td><input type="range" min="0" max="360" id="i`+i+`rx" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[0]+`"><span id="i`+i+`rsx"></span></td>
+                        <td><input type="range" min="0" max="360" id="i`+i+`ry" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[1]+`"><span id="i`+i+`rsy"></span></td>
+                        <td><input type="range" min="0" max="360" id="i`+i+`rz" oninput="JS3DGeometry.changeItem(`+i+`)" value="`+this.Items[i].transform.rotation[2]+`"><span id="i`+i+`rsz"></span></td>
+                    </tr>
+                </table>
+            </details>
+        </div>
+            `;
+        }
+
+    },
 
 
 
