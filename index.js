@@ -17,23 +17,23 @@ function R(axis, dedree) {
         case 'x':
             return [
                 [1,0,0,0],
-                [0,Math.sin(dedree),Math.cos(dedree),0],
-                [0,-Math.cos(dedree),Math.sin(dedree),0],
+                [0,Math.cos(dedree),Math.sin(dedree),0],
+                [0,-Math.sin(dedree),Math.cos(dedree),0],
                 [0,0,0,1]
             ];
             break;
         case 'y':
             return [
-                [Math.sin( dedree ),0,Math.cos( dedree ),0],
+                [Math.cos( dedree ),0,Math.sin( dedree ),0],
                 [0,1,0,0],
-                [-Math.cos( dedree ),0,Math.sin( dedree ),0],
+                [-Math.sin( dedree ),0,Math.cos( dedree ),0],
                 [0,0,0,1]
             ];
             break;
         case 'z':
             return [
-                [Math.sin( dedree ),Math.cos( dedree ),0,0],
-                [-Math.cos( dedree ),Math.sin( dedree ),0,0],
+                [Math.cos( dedree ),Math.sin( dedree ),0,0],
+                [-Math.sin( dedree ),Math.cos( dedree ),0,0],
                 [0,0,1,0],
                 [0,0,0,1]
             ];
