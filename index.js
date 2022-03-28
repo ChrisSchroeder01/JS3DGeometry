@@ -1,18 +1,22 @@
 var Perspective = [
     [1,0,0,0],
     [0,1,0,0],
-    [0,0,1,0],
+    [0,0,1,1/20],
     [0,0,0,0]
 ];
 
 
-function P() {
+function P(fieldOfViewInRadians, aspectRatio, near, far) {
+
+    var f = 1.0 / Math.tan(fieldOfViewInRadians / 2);
+    var rangeInv = 1 / (near - far);
+
     return [
-        [1,0,0,0],
-        [0,1,0,0],
-        [0,0,1,1/90],
-        [0,0,0,0]
-    ]
+        [f / aspectRatio, 0,                          0,   0],
+        [0,               f,                          0,   0],
+        [0,               0,    (near + far) * rangeInv,  -1],
+        [0,               0,  near * far * rangeInv * 2,   0]
+    ];
 }
 
 
@@ -132,8 +136,8 @@ var JS3DGeometry = {
         this.ctx = this.canvas.getContext("2d");
         this.Items = [];
         this.addCube(50,50,50);
-        this.addCylinder(50,50);
-        this.addCone(50,100);
+        //this.addCylinder(50,50);
+        //this.addCone(50,100);
         document.getElementById("JS3DGeometry").appendChild(this.canvas);
         this.Interval = setInterval(() => {
             this.clear();
@@ -166,16 +170,15 @@ var JS3DGeometry = {
                 p1 = TM(p1, R('x',Math.PI * Item.transform.rotation[0] / 180));
                 p1 = TM(p1, R('y',Math.PI * Item.transform.rotation[1] / 180));
                 p1 = TM(p1, R('z',Math.PI * Item.transform.rotation[2] / 180));
-                //p1 = TM(p1, P());
                 p1 = TM(p1, T(Item.transform.translation[0],Item.transform.translation[1],Item.transform.translation[2]));
-                
+                //p1 = TM(p1, P(Math.PI*0.5, this.canvas.width/this.canvas.height,1,50));
+
                 p2 = TM(p2, S(Item.transform.scale[0],Item.transform.scale[1],Item.transform.scale[2]));
                 p2 = TM(p2, R('x',Math.PI * Item.transform.rotation[0] / 180));
                 p2 = TM(p2, R('y',Math.PI * Item.transform.rotation[1] / 180));
                 p2 = TM(p2, R('z',Math.PI * Item.transform.rotation[2] / 180));
-                //p2 = TM(p2, P());
                 p2 = TM(p2, T(Item.transform.translation[0],Item.transform.translation[1],Item.transform.translation[2]));
-                
+                //p2 = TM(p2, P(Math.PI*0.5, this.canvas.width/this.canvas.height,1,50));
 
 
                 this.ctx.beginPath();
